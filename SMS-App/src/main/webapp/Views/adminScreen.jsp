@@ -1,213 +1,595 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-pageEncoding="ISO-8859-1"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Management | Admin Portal</title>
 <link
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-rel="stylesheet" 
-integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-crossorigin="anonymous">
+	href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&amp;display=swap"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 <style type="text/css">
- .enroll{
- background-image: url("Images/addstudent.jpg");
- background-size: cover;
- background-repeat: no-repeat;
- }
- .heading{
- font-family:cursive;
- text-align: center;
- margin-bottom: 20px;
- }
- form{
- width:400px
- }
- .view{
- background-image: url("Images/viewstudent.jpeg");
- background-size: cover;
- background-repeat: no-repeat;
- }
+body {
+	font-family: 'Poppins', sans-serif;
+	background-color: #f4f7f6;
+	scroll-behavior: smooth;
+}
+
+/* Modern Navbar */
+.navbar {
+	backdrop-filter: blur(10px);
+	background: rgba(255, 255, 255, 0.8) !important;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Styling */
+.hero-section {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+		url("Images/addstudent.jpg");
+	background-size: cover;
+	background-position: center;
+}
+
+/* Glassmorphism Card */
+.glass-card {
+	background: rgba(255, 255, 255, 0.9);
+	backdrop-filter: blur(5px);
+	border-radius: 20px;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	padding: 2rem;
+	transition: transform 0.3s ease;
+}
+
+.glass-card:hover {
+	transform: translateY(-5px);
+}
+
+/* Table Styling */
+.view-section {
+	padding: 80px 0;
+	background-color: #ffffff;
+}
+
+.table-container {
+	border-radius: 15px;
+	overflow: hidden;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.table thead {
+	background: #4e73df;
+	color: white;
+}
+
+/* Custom Buttons */
+.btn-modern {
+	border-radius: 10px;
+	padding: 10px 25px;
+	font-weight: 600;
+	transition: all 0.3s;
+}
+
+.btn-enroll {
+	background-color: #4e73df;
+	color: white;
+}
+
+.btn-enroll:hover {
+	background-color: #2e59d9;
+	color: white;
+	box-shadow: 0 4px 15px rgba(78, 115, 223, 0.4);
+}
+
+/* Form Controls */
+.form-control, .form-select {
+	border-radius: 8px;
+	padding: 12px;
+	border: 1px solid #dee2e6;
+}
+
+.form-control:focus {
+	box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.2);
+	border-color: #4e73df;
+}
+
+/* --- ATTRACTIVE FOOTER STYLES --- */
+.footer-cta {
+	border-bottom: 1px solid #373636;
+	padding-bottom: 30px;
+}
+
+.single-cta i {
+	color: #4e73df;
+	font-size: 30px;
+	float: left;
+	margin-top: 8px;
+}
+
+.cta-text {
+	padding-left: 15px;
+	display: inline-block;
+}
+
+.cta-text h4 {
+	color: #fff;
+	font-size: 20px;
+	font-weight: 600;
+	margin-bottom: 2px;
+}
+
+.cta-text span {
+	color: #757575;
+	font-size: 15px;
+}
+
+.footer-section {
+	background: #151414;
+	position: relative;
+	padding-top: 50px;
+}
+
+.footer-content {
+	position: relative;
+	z-index: 2;
+}
+
+.footer-logo img {
+	max-width: 150px;
+	border-radius: 5px;
+}
+
+.footer-text p {
+	margin-bottom: 14px;
+	font-size: 14px;
+	color: #7e7e7e;
+	line-height: 28px;
+}
+
+.footer-social-icon span {
+	color: #fff;
+	display: block;
+	font-size: 20px;
+	font-weight: 700;
+	font-family: 'Poppins', sans-serif;
+	margin-bottom: 20px;
+}
+
+.footer-social-icon a {
+	color: #fff;
+	font-size: 16px;
+	margin-right: 15px;
+}
+
+.footer-social-icon i {
+	height: 40px;
+	width: 40px;
+	text-align: center;
+	line-height: 38px;
+	border-radius: 50%;
+}
+
+.facebook-bg {
+	background: #3B5998;
+}
+
+.twitter-bg {
+	background: #55ACEE;
+}
+
+.google-bg {
+	background: #DD4B39;
+}
+
+.footer-widget-heading h3 {
+	color: #fff;
+	font-size: 20px;
+	font-weight: 600;
+	margin-bottom: 40px;
+	position: relative;
+}
+
+.footer-widget-heading h3::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -15px;
+	height: 2px;
+	width: 50px;
+	background: #4e73df;
+}
+
+.footer-widget ul li {
+	display: inline-block;
+	width: 50%;
+	margin-bottom: 12px;
+}
+
+.footer-widget ul li a:hover {
+	color: #4e73df;
+}
+
+.footer-widget ul li a {
+	color: #878787;
+	text-transform: capitalize;
+	text-decoration: none;
+}
+
+.copyright-area {
+	background: #202020;
+	padding: 25px 0;
+	margin-top: 30px;
+}
+
+.copyright-text p {
+	margin: 0;
+	font-size: 14px;
+	color: #878787;
+}
+
+.footer-menu li {
+	display: inline-block;
+	margin-left: 20px;
+}
+
+.footer-menu li a {
+	font-size: 14px;
+	color: #878787;
+	text-decoration: none;
+}
 </style>
+<script type="text/javascript">
+	function handleAction(actionPath) {
+		const radios = document.getElementsByName('id');
+		let selectedValue = null;
+
+		for (let i = 0; i < radios.length; i++) {
+			if (radios[i].checked) {
+				selectedValue = radios[i].value;
+				break;
+			}
+		}
+
+		if (selectedValue) {
+			// If clicking 'Shift', redirect to the dedicated batch page
+			if (actionPath === '/batch') {
+				window.location.href = "batch?id=" + selectedValue;
+				return;
+			}
+
+			// Handle deletion with confirmation
+			if (actionPath.includes('/remove')) {
+				if (!confirm("Are you sure you want to delete this student record?"))
+					return;
+			}
+
+			const form = document.forms['fn'];
+			form.action = actionPath;
+			form.submit();
+		} else {
+			alert("Please select a student record first!");
+		}
+	}
+</script>
 </head>
 <body>
- <div class="card">
- <nav class="d-flex justify-content-between p-2 border border-primary" >
-<img src="Images/logo.jpeg" width="100px" height="50px">
-<div class="pt-2">
-<a href="#enroll">
-<button class="btn btn-outline-primary">Enroll Student</button>
-</a>
-<a href="#view">
-<button class="btn btn-outline-primary">View Student</button>
-</a>
-<a href="/">
- <button class="btn btn-outline-primary">Logout</button>
-</a>
-</div>
-</nav>
-<section class="vh-100 gradient-custom enroll mt-2" id="enroll">
- <div class="container h-100">
- <div class="row justify-content-center h-100 w-75">
- <div class="col-12 col-lg-9 col-xl-7">
- <div class="card shadow-2-strong card-registration mt-0" style="border-radius: 15px;">
- <div class="card-body mt-0">
- <h3 class="heading">Student Enrollment Form</h3>
 
- <form action="enroll_student">
- <div class="row " >
- <div class="col-md-6 mb-2">
- <div class="form-outline">
- <input type="text" id="firstName" class="form-control form-control-sm"
- name="studentFullName"/>
- <label class="form-label" for="firstName">First Full Name</label>
- </div>
- </div>
- <div class="col-md-6 mb-2">
- <div class="form-outline">
- <input type="email" id="lastName" class="form-control form-control-sm" name="studentEmail"/>
- <label class="form-label" for="lastName">Student Email</label>
- </div>
- </div>
- </div>
- <div class="row">
- <div class="col-md-6 mb-2 d-flex align-items-center">
- <div class="form-outline datepicker w-100">
- <input type="number" class="form-control form-control-sm" id="birthdayDate"
- name="studentAge"/>
- <label for="birthdayDate" class="form-label">Student Age</label>
- </div>
- </div>
+	<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+		<div class="container">
+			<a class="navbar-brand" href="#"> <img src="Images/logo.jpeg"
+				alt="Logo" height="40" class="d-inline-block align-text-top">
+				<span class="ms-2 fw-bold text-primary">EduManage</span>
+			</a>
+			<div class="d-flex gap-2">
+				<a href="#enroll" class="btn btn-sm btn-outline-primary btn-modern">Enroll</a>
+				<a href="#view" class="btn btn-sm btn-outline-primary btn-modern">Database</a>
+				<a href="/" class="btn btn-sm btn-danger btn-modern"><i
+					class="fas fa-sign-out-alt"></i></a>
+			</div>
+		</div>
+	</nav>
 
- <div class="col-md-6 mb-2 pb-2">
- <div class="form-outline">
- <input type="tel" id="text" class="form-control form-control-sm" name="studentCollageName"/>
- <label class="form-label" for="phoneNumber">Student Collage Name</label>
- </div>
- </div>
- </div>
- <div class="row">
- <div class="col-md-6 mb-2 pb-2">
- <div class="form-outline">
- <input type="number" id="emailAddress" class="form-control form-control-sm" name="feesPaid"/>
- <label class="form-label" for="emailAddress">Fees Paid</label>
- </div>
- </div>
- <div class="col-md-6 mb-2">
- <h6 class="mb-2 pb-1">Student Course : </h6>
- <div class="form-check form-check-inline">
- <input class="form-check-input" type="radio" name="studentCourse" id="java" value="Java"
-checked />
- <label class="form-check-label" for="java">Java</label>
- </div>
- <div class="form-check form-check-inline">
- <input class="form-check-input" type="radio" name="studentCourse" id="python" value="Python" />
- <label class="form-check-label" for="python">Python</label>
- </div>
- <div class="form-check form-check-inline">
-<input class="form-check-input" type="radio" name="studentCourse" id="testing" value="Testing"
-/>
- <label class="form-check-label" for="testing">Testing</label>
- </div>
- </div>
+	<section class="hero-section" id="enroll">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-lg-6 col-md-10">
+					<div class="glass-card shadow-lg">
+						<h2 class="text-center fw-bold mb-4 text-dark">Enroll New
+							Student</h2>
+						<form action="enroll_student" id="enroll-form">
+							<div class="row g-3">
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Full Name</label> <input
+										type="text" class="form-control" name="studentFullName"
+										placeholder="John Doe" required>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Email Address</label> <input
+										type="email" class="form-control" name="studentEmail"
+										placeholder="john@example.com" required>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Age</label> <input
+										type="number" class="form-control" name="StudentAge"
+										placeholder="20">
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">College</label> <input
+										type="text" class="form-control" name="studentCollageName"
+										placeholder="University Name">
+								</div>
+								<div class="col-12">
+									<label class="form-label small fw-bold">Course
+										Selection</label>
+									<div class="p-2 border rounded bg-light text-center">
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio"
+												name="StudentCourse" value="Java" id="java" checked>
+											<label class="form-check-label" for="java">Java
+												Development</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio"
+												name="StudentCourse" value="Python" id="python"> <label
+												class="form-check-label" for="python">Python Data
+												Science</label>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Mode</label> <select
+										class="form-select" name="batchMode">
+										<option value="Online">🌐 Online</option>
+										<option value="Offline">🏫 Offline</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<label class="form-label small fw-bold">Batch ID</label> <select
+										class="form-select" name="batchNumber">
+										<option value="FDJ-185">FDJ-185</option>
+										<option value="REG-185">REG-185</option>
+										<option value="FDJ-161">FDJ-161</option>
+										<option value="REG-161">REG-161</option>
+									</select>
+								</div>
+								<div class="col-12">
+									<label class="form-label small fw-bold">Fees Paid (USD)</label>
+									<input type="number" class="form-control" name="feesPaid"
+										placeholder="Amount">
+								</div>
+							</div>
+							<button class="btn btn-enroll btn-modern w-100 mt-4 py-3"
+								type="submit">Complete Enrollment</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
- </div>
- <div class="row">
- <div class="col">
- <select class="select form-control-sm" name="batchMode">
- <option value="#" disabled >Select Batch Mode</option>
- <option value="Online">Online</option>
- <option value="Offline">Offline</option>
+	<section class="view-section" id="view">
+		<div class="container">
+			<div class="text-center mb-5">
+				<h2 class="fw-bold">Student Database</h2>
+				<p class="text-muted">Manage records, process payments, and
+					update schedules.</p>
+			</div>
 
- </select>
-<label class="form-label select-label">Batch Mode</label>
- </div>
- <div class="col">
- <select class="select form-control-sm" name="batchNumber">
- <option value="#" disabled>Select Batch Number</option>
- <option value="FDJ-185">FDJ-185</option>
- <option value="REG-185">REG-185</option>
- <option value="FDJ-161">FDJ-161</option>
- <option value="REG-161">REG-161</option>
- </select>
-<label class="form-label select-label">Batch Number</label>
- </div>
- </div>
- <div class="mt-2 pt-2 d-flex justify-content-center">
- <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
- </div>
- </form>
- </div>
- </div>
- </div>
- </div>
- </div>
-</section>
-<section class="view" style="height:530px" id="view">
- <h1 class="text-center">Student Details..!</h1>
- <div class="text-center w-100">
- <form action="search" class="w-100">
- <select class="select form-control-sm border border-primary"
- name="batchNumber">
- <option value="#" slected>Select Batch Number</option>
- <option value="FDJ-185">FDJ-185</option>
- <option value="REG-185">REG-185</option>
- <option value="FDJ-161">FDJ-161</option>
- <option value="REG-161">REG-161</option>
- </select>
- <button class="btn btn-outline-primary mb-1">Search</button>
- </form>
- <marquee>
- <h1 style="color: red;">
- ${message}
- </h1>
- </marquee>
- </div>
- <table class="table table-hover" style="font-size:
- small">
- <thead>
- <tr>
- <th>ID</th>
- <th>Student Name</th>
- <th>Student Email</th>
- <th>Age</th>
- <th>Collage Name</th>
- <th>Course Name</th>
- <th>Bath No</th>
- <th>Mode</th>
- <th>Fess Recived</th>
- <th>Actions</th>
- </tr>
- </thead>
- <tbody>
- <c:forEach items="${data}" var="s">
- <tr>
- <td>${s.studentId}</td>
- <td>${s.studentFullName}</td>
- <td>${s.studentEmail}</td>
- <td>${s.studentAge}</td>
- <td>${s.studentCollageName}</td>
- <td>${s.studentCourse}</td>
- <td>${s.batchNumber}</td>
- <td>${s.batchMode}</td>
- <td>${s.feesPaid}</td>
- <td>
- <div class="btn-group btn-group-sm" role="group"
- aria-label="...">
- <button class="btn btn-outline-success">PayFees</button>
- <button class="btn btn-outline-primary">ShiftBatch</button>
- <button class="btn btn-outlinedanger">Remove</button>
- </div>
- </td>
+			<div class="row justify-content-center mb-4">
+				<div class="col-md-6">
+					<form action="search" class="input-group">
+						<select class="form-select" name="batchNumber">
+							<option selected disabled>Filter by Batch...</option>
+							<option value="FDJ-185">FDJ-185</option>
+							<option value="REG-185">REG-185</option>
+							<option value="FDJ-161">FDJ-161</option>
+							<option value="REG-161">REG-161</option>
+						</select>
+						<button class="btn btn-primary px-4" type="submit">
+							<i class="fas fa-search"></i> Search
+						</button>
+					</form>
+				</div>
+			</div>
 
- </tr>
- </c:forEach>
+			<c:if test="${not empty message}">
+				<div class="alert alert-warning alert-dismissible fade show"
+					role="alert">
+					<strong>Notice:</strong> ${message}
+					<button type="button" class="btn-close" data-bs-dismiss="alert"
+						aria-label="Close"></button>
+				</div>
+			</c:if>
 
- </tbody>
+			<div class="table-container shadow">
+				<form name="fn" method="get" action="">
+					<table class="table table-hover bg-white mb-0">
+						<thead>
+							<tr>
+								<th class="ps-4">ID</th>
+								<th>Student Name</th>
+								<th>Email</th>
+								<th>Course</th>
+								<th>Batch</th>
+								<th>Fees</th>
+								<th>Select</th>
+								<th class="text-center">Quick Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach items="${data}" var="s">
+								<tr>
+									<td class="ps-4 fw-bold">${s.studentId}</td>
+									<td>${s.studentFullName}</td>
+									<td class="text-muted">${s.studentEmail}</td>
+									<td><span class="badge bg-info text-dark">${s.studentCourse}</span></td>
+									<td>${s.batchNumber}</td>
+									<td class="text-success fw-bold">${s.feesPaid}</td>
+									<td><input type="radio" class="form-check-input" name="id"
+										value="${s.studentId}"></td>
+									<td class="text-center">
+										<div class="btn-group shadow-sm">
+											<button type="button" class="btn btn-sm btn-outline-success"
+												onclick="handleAction('/fees')">
+												<i class="fas fa-wallet"></i> Pay
+											</button>
+											<button type="button" class="btn btn-sm btn-outline-primary"
+												onclick="handleAction('/batch')">
+												<i class="fas fa-exchange-alt"></i> Shift
+											</button>
+											<button type="button" class="btn btn-sm btn-outline-danger"
+												onclick="handleAction('/remove')">
+												<i class="fas fa-trash"></i> Remove
+											</button>
+										</div>
+									</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</form>
 
- </table>
-</section>
- </div>
+				<nav aria-label="...">
+					<ul class="pagination pagination-sm">
+						<li class="page-item"><a class="page-link" href="paging?pageNo=0"
+							tabindex="-1">1</a></li>
+						<li class="page-item"><a class="page-link" href="paging?pageNo=2">2</a></li>
+						<li class="page-item"><a class="page-link" href="paging?pageNo=3">3</a></li>
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+	</section>
+
+	<footer class="footer-section">
+		<div class="container">
+			<div class="footer-cta">
+				<div class="row">
+					<div class="col-xl-4 col-md-4 mb-30">
+						<div class="single-cta">
+							<i class="fas fa-map-marker-alt"></i>
+							<div class="cta-text">
+								<h4>Find us</h4>
+								<span>1010 Avenue, sw 54321, Chandigarh</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-4 col-md-4 mb-30">
+						<div class="single-cta">
+							<i class="fas fa-phone"></i>
+							<div class="cta-text">
+								<h4>Call us</h4>
+								<span>9876543210 0</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-4 col-md-4 mb-30">
+						<div class="single-cta">
+							<i class="far fa-envelope-open"></i>
+							<div class="cta-text">
+								<h4>Mail us</h4>
+								<span>mail@info.com</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-content pt-5 pb-5">
+				<div class="row">
+					<div class="col-xl-4 col-lg-4 mb-50">
+						<div class="footer-widget">
+							<div class="footer-logo">
+								<a href="#"><img src="Images/logo.jpeg" class="img-fluid"
+									alt="logo"></a>
+							</div>
+							<div class="footer-text mt-3">
+								<p>EduManage is a complete student record management
+									solution designed to simplify administration and academic
+									tracking for modern institutions.</p>
+							</div>
+							<div class="footer-social-icon">
+								<span>Follow us</span> <a href="#"><i
+									class="fab fa-facebook-f facebook-bg"></i></a> <a href="#"><i
+									class="fab fa-twitter twitter-bg"></i></a> <a href="#"><i
+									class="fab fa-google-plus-g google-bg"></i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-4 col-lg-4 col-md-6 mb-30">
+						<div class="footer-widget ps-lg-5">
+							<div class="footer-widget-heading">
+								<h3>Useful Links</h3>
+							</div>
+							<ul class="list-unstyled">
+								<li><a href="#enroll">Enroll Student</a></li>
+								<li><a href="#view">Database</a></li>
+								<li><a href="#">About us</a></li>
+								<li><a href="#">Our Services</a></li>
+								<li><a href="#">Expert Team</a></li>
+								<li><a href="#">Contact us</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-xl-4 col-lg-4 col-md-6 mb-50">
+						<div class="footer-widget">
+							<div class="footer-widget-heading">
+								<h3>Newsletter</h3>
+							</div>
+							<div class="footer-text mb-25">
+								<p>Don't miss to subscribe to our new feeds, kindly fill the
+									form below.</p>
+							</div>
+							<div class="subscribe-form input-group mt-3">
+								<input type="text" class="form-control"
+									placeholder="Email Address">
+								<button class="btn btn-primary">
+									<i class="fab fa-telegram-plane"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="copyright-area">
+			<div class="container">
+				<div class="row">
+					<div class="col-xl-6 col-lg-6 text-center text-lg-left">
+						<div class="copyright-text">
+							<p>
+								Copyright &copy; 2025, All Right Reserved <a href="#">EduManage</a>
+							</p>
+						</div>
+					</div>
+					<div class="col-xl-6 col-lg-6 d-none d-lg-block text-right">
+						<div class="footer-menu">
+							<ul class="list-unstyled mb-0">
+								<li><a href="#">Home</a></li>
+								<li><a href="#">Terms</a></li>
+								<li><a href="#">Privacy</a></li>
+								<li><a href="#">Policy</a></li>
+								<li><a href="#">Contact</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		type="text/javascript"></script>
 </body>
+</html>

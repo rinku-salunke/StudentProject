@@ -10,4 +10,13 @@ public interface ServiceI {
 
 	List<Student> getBatchesStudent(String batchNumber);
 
+	Student getStudent(int id);
+
+	List<Student> updateStudentFees(int studentid,float amount);
+
+	void removeStudent(int id);
+
+	List<Student> updateStudentBatch(int id, String newBatch);
+
+	List<Student> paging(int pageNo, int i);
 }
