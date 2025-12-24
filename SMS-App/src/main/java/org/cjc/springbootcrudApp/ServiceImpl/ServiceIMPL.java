@@ -78,6 +78,11 @@ public class ServiceIMPL implements ServiceI{
 		sr.save(s); // JpaRepository save() handles update if ID is present
 	    return sr.findAll();
 	}
+
+	@Override
+	public List<Student> searchByBatch(String batchNumber) {
+		return sr.findAllByBatchNumber(batchNumber);
+	}
 	}
 
 

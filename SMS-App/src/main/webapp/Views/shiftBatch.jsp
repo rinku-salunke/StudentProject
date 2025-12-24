@@ -174,10 +174,10 @@
                                     </span>
                                     <select class="form-select batch-select border-start-0" name="newBatch" required style="border-radius: 0 12px 12px 0;">
                                         <option value="" disabled selected>Choose target batch...</option>
-                                        <option value="FDJ-185">FDJ-185 (Java Fullstack)</option>
-                                        <option value="REG-185">REG-185 (Regular Python)</option>
-                                        <option value="FDJ-161">FDJ-161 (Advanced Java)</option>
-                                        <option value="REG-161">REG-161 (Advanced Data Science)</option>
+                                        <option value="FDJ-185">FDJ-185 (FullDay Java Fullstack)</option>
+                                        <option value="REG-185">REG-185 (Regular Java Fullstack)</option>
+                                        <option value="FDJ-161">FDJ-161 (FullDay Python)</option>
+                                        <option value="REG-161">REG-161 (Regular Python)</option>
                                     </select>
                                 </div>
                             </div>

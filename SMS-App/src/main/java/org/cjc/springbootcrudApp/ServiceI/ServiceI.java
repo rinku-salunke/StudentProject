@@ -21,4 +21,6 @@ public interface ServiceI {
 	List<Student> paging(int pageNo, int i);
 
 	List<Student> updateStudentData(Student s);
+
+	List<Student> searchByBatch(String batchNumber);
 }

@@ -288,6 +288,71 @@ body {
 			alert("Please select a student record first!");
 		}
 	}
+	function handleFeeStatus() {
+	    const radios = document.getElementsByName('id');
+	    let selectedValue = null;
+
+	    // Look for the selected radio button
+	    for (let i = 0; i < radios.length; i++) {
+	        if (radios[i].checked) {
+	            selectedValue = radios[i].value;
+	            break;
+	        }
+	    }
+
+	    if (selectedValue) {
+	        // Redirect to the feeStatus mapping with the selected ID
+	        window.location.href = "feeStatus?studentid=" + selectedValue;
+	    } else {
+	        alert("Please select a student from the database table first to view their fee status!");
+	    }
+	}
+	document.addEventListener("DOMContentLoaded", function() {
+	    var msg = "${message}";
+	    
+	    if (msg && msg.trim() !== "") {
+	        var modalTitle = document.getElementById('modalTitle');
+	        var successIcon = document.getElementById('successIcon');
+	        var errorIcon = document.getElementById('errorIcon');
+	        var modalBtn = document.getElementById('modalBtn');
+	        var lowerMsg = msg.toLowerCase();
+	        
+	        // 1. DETERMINE SUCCESS OR ERROR
+	        // We include 'deleted', 'payment', and 'shifted' as success triggers
+	        if (lowerMsg.includes("success") || lowerMsg.includes("shifted") || 
+	            lowerMsg.includes("deleted") || lowerMsg.includes("payment")) {
+	            
+	            // 2. SET SPECIFIC HEADINGS
+	            if (lowerMsg.includes("payment")) {
+	                modalTitle.innerText = "Fee Updated!"; // Your requested change
+	            } else if (lowerMsg.includes("deleted")) {
+	                modalTitle.innerText = "Student Deleted Successfully!";
+	            } else if (lowerMsg.includes("shifted")) {
+	                modalTitle.innerText = "Batch Shifted!";
+	            } else {
+	                modalTitle.innerText = "Enrolled Successfully!";
+	            }
+
+	            // 3. APPLY SUCCESS STYLING (GREEN)
+	            modalTitle.className = "fw-bold mb-3 text-success";
+	            successIcon.classList.remove('d-none');
+	            errorIcon.classList.add('d-none');
+	            modalBtn.style.backgroundColor = "#28a745"; 
+	            modalBtn.classList.add('btn-success');
+	        } else {
+	            // 4. APPLY ERROR STYLING (RED)
+	            modalTitle.innerText = "Action Failed";
+	            modalTitle.className = "fw-bold mb-3 text-danger";
+	            errorIcon.classList.remove('d-none');
+	            successIcon.classList.add('d-none');
+	            modalBtn.style.backgroundColor = "#ff3b5c";
+	            modalBtn.classList.add('btn-danger');
+	        }
+	        
+	        var myModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+	        myModal.show();
+	    }
+	});
 </script>
 </head>
 <body>
@@ -301,9 +366,9 @@ body {
 			<div class="d-flex gap-2">
 				<a href="#enroll" class="btn btn-sm btn-outline-primary btn-modern">Enroll</a>
 				<a href="#view" class="btn btn-sm btn-outline-primary btn-modern">Database</a>
-<a href="feeStatus?studentid=${student.studentId}" class="btn btn-sm btn-info">
-    <i class="fas fa-file-invoice-dollar"></i>Fee Status
-</a>
+				<button type="button" onclick="handleFeeStatus()" class="btn btn-sm btn-info btn-modern">
+        <i class="fas fa-file-invoice-dollar"></i>Fee Status
+    </button>
 				 <a href="/" class="btn btn-sm btn-danger btn-modern"><i
 					class="fas fa-sign-out-alt"></i></a>
 			</div>
@@ -413,83 +478,115 @@ body {
 				</div>
 			</div>
 
-			<c:if test="${not empty message}">
-				<div class="alert alert-warning alert-dismissible fade show"
-					role="alert">
-					<strong>Notice:</strong> ${message}
-					<button type="button" class="btn-close" data-bs-dismiss="alert"
-						aria-label="Close"></button>
-				</div>
-			</c:if>
+			<div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center border-0 shadow-lg" style="border-radius: 25px; padding: 2.5rem;">
+            <div class="modal-body">
+                <div id="successIcon" class="mb-3 d-none">
+                    <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                </div>
+                
+                <div id="errorIcon" class="mb-3 d-none">
+                    <i class="fas fa-exclamation-circle text-danger" style="font-size: 5rem;"></i>
+                </div>
+                
+                <h3 id="modalTitle" class="fw-bold mb-3"></h3>
+                
+                <p id="modalMessage" class="text-muted mb-4 fs-5">${message}</p>
+                
+                <button type="button" id="modalBtn" class="btn w-100 py-3 fw-bold shadow-sm" 
+                        data-bs-dismiss="modal" 
+                        style="border-radius: 50px; border: none; font-size: 1.1rem; transition: 0.3s;">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-			<div class="table-container shadow">
-				<form name="fn" method="get" action="">
-					<table class="table table-hover bg-white mb-0">
-						<thead>
-							<tr>
-								<th class="ps-4">ID</th>
-								<th>Student Name</th>
-								<th>Email</th>
-								<th>Age</th>
-								<th>studentCollageName</th>
-								<th>Course</th>
-								<th>Batch</th>
-								<th>Fees</th>
-								<th>Select</th>
-								<th class="text-center">Quick Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach items="${data}" var="s">
-								<tr>
-									<td class="ps-4 fw-bold text-primary">${s.studentId}</td>
-									<td class="fw-semibold">${s.studentFullName}</td>
-									<td class="text-muted small">${s.studentEmail}</td>
-									<td>${s.studentAge}</td>
-									<td>${s.studentCollageName}</td>
+			<div class="table-container shadow bg-white rounded">
+    <c:choose>
+        <%-- Case 1: Data exists, show the table --%>
+        <c:when test="${not empty data}">
+            <form name="fn" method="get" action="">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">ID</th>
+                                <th>Student Name</th>
+                                <th>Email</th>
+                                <th>Age</th>
+                                <th>College</th>
+                                <th>Course</th>
+                                <th>Batch</th>
+                                <th>Fees</th>
+                                <th class="text-center">Select</th>
+                                <th class="text-center">Quick Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${data}" var="s">
+                                <tr>
+                                    <td class="ps-4 fw-bold text-primary">${s.studentId}</td>
+                                    <td class="fw-semibold">${s.studentFullName}</td>
+                                    <td class="text-muted small">${s.studentEmail}</td>
+                                    <td>${s.studentAge}</td>
+                                    <td>${s.studentCollageName}</td>
+                                    <td><span class="badge bg-info">${s.studentCourse}</span></td>
+                                    <td><span class="badge bg-secondary">${s.batchNumber}</span></td>
+                                    <td class="text-success fw-bold">₹${s.feesPaid}</td>
+                                    <td class="text-center">
+                                        <input type="radio" class="form-check-input" name="id" value="${s.studentId}">
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="btn-group shadow-sm">
+                                            <%-- Edit Button --%>
+                                            <button type="button" class="btn btn-sm btn-outline-warning"
+                                                onclick="handleAction('/edit')" title="Edit Student">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
 
-									<td><span
-										class="badge ${s.studentCourse == 'Java' ? 'bg-primary' : 'bg-success'}">
-											${s.studentCourse} </span></td>
+                                            <%-- Pay Fees Button --%>
+                                            <button type="button" class="btn btn-sm btn-outline-success"
+                                                onclick="handleAction('/fees')" title="Pay Fee">
+                                                <i class="fas fa-file-invoice-dollar"></i>
+                                            </button>
 
-									<td><span class="badge bg-light text-dark border">${s.batchNumber}</span>
-									</td>
+                                            <%-- Shift Batch Button --%>
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                onclick="handleAction('/batch')" title="Shift Batch">
+                                                <i class="fas fa-exchange-alt"></i>
+                                            </button>
 
-									<td class="text-success fw-bold">₹${s.feesPaid}</td>
+                                            <%-- Remove Button --%>
+                                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                                onclick="handleAction('/remove')" title="Delete Student">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </c:when>
 
-									<td class="text-center"><input type="radio"
-										class="form-check-input" name="id" value="${s.studentId}">
-									</td>
-
-									<td class="text-center">
-										<div class="btn-group shadow-sm">
-											<button type="button" class="btn btn-sm btn-outline-warning"
-												onclick="handleAction('/edit')" title="edit student">
-												<i class="fas fa-edit"></i>
-											</button>
-
-											<button type="button" class="btn btn-sm btn-outline-success"
-												onclick="handleAction('/fees')" title="Pay Fee">
-												<i class="fas fa-file-invoice-dollar"></i>
-											</button>
-
-											<button type="button" class="btn btn-sm btn-outline-primary"
-												onclick="handleAction('/batch')" title="Shift Batch">
-												<i class="fas fa-exchange-alt"></i>
-											</button>
-											<button type="button" class="btn btn-sm btn-outline-danger"
-												onclick="handleAction('/remove')" title="delete student">
-												<i class="fas fa-trash"></i>
-											</button>
-
-										</div>
-									</td>
-								</tr>
-							</c:forEach>
-						</tbody>
-					</table>
-				</form>
-
+        <%-- Case 2: No data, show the empty state message --%>
+        <c:otherwise>
+            <div class="text-center py-5">
+                <i class="fas fa-search-minus text-muted mb-3" style="font-size: 5rem; opacity: 0.2;"></i>
+                <h4 class="fw-bold text-dark">No records available for this batch</h4>
+                <p class="text-muted">Please try selecting a different batch or click below to reset.</p>
+                <a href="view" class="btn btn-primary btn-modern mt-3 px-4">
+                    <i class="fas fa-sync-alt me-2"></i>View All Students
+                </a>
+            </div>
+        </c:otherwise>
+    </c:choose>
+</div>
 				<nav aria-label="...">
 					<ul class="pagination pagination-sm">
 						<li class="page-item"><a class="page-link"

@@ -21,7 +21,6 @@
         .profile-avatar { width: 130px; height: 130px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 4px solid rgba(255,255,255,0.4); font-size: 3.5rem; }
         .form-container { padding: 45px; background: #ffffff; }
         
-        /* Attractive Fee Completion Message */
         .fee-completion-card {
             background: var(--success-bg);
             border: 1px dashed var(--success-text);
@@ -31,12 +30,8 @@
             align-items: center;
             gap: 15px;
             margin-top: 15px;
-            animation: fadeIn 0.5s ease-out;
         }
         .fee-completion-card i { font-size: 2rem; color: var(--success-text); }
-        .fee-title { font-weight: 700; color: var(--success-text); margin-bottom: 0; }
-        .fee-desc { font-size: 0.85rem; color: #065f46; margin-bottom: 0; opacity: 0.8; }
-
         .section-header { font-size: 0.8rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin: 30px 0 20px; display: flex; align-items: center; }
         .section-header::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; margin-left: 15px; }
         
@@ -45,23 +40,26 @@
             color: white; font-weight: 600; transition: all 0.3s;
         }
         .btn-update:disabled { background: var(--disabled-gray); cursor: not-allowed; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
+
     <div class="edit-card">
         <div class="row g-0">
             <div class="col-lg-3 sidebar-brand">
                 <div class="profile-avatar"><i class="fas fa-user-edit"></i></div>
-                <h4 class="fw-bold">${student.studentFullName}</h4>
-                <p class="opacity-75 small">ID: #${student.studentId}</p>
-                <div class="mt-auto"><a href="view" class="btn btn-outline-light btn-sm rounded-pill px-4">Discard</a></div>
+                <h4 class="fw-bold text-white">${student.studentFullName}</h4>
+                <p class="opacity-75 small text-white">ID: #${student.studentId}</p>
+                <div class="mt-auto"><a href="view" class="btn btn-outline-light btn-sm rounded-pill px-4">Back to Database</a></div>
             </div>
 
             <div class="col-lg-9 form-container">
-                <form id="editForm">
+                <form id="editForm" action="update_student_process" method="POST">
                     <input type="hidden" name="studentId" value="${student.studentId}">
+                    <input type="hidden" name="studentEmail" value="${student.studentEmail}">
+                    <input type="hidden" name="studentCollageName" value="${student.studentCollageName}">
+                    <input type="hidden" name="studentAge" value="${student.studentAge}">
+                    <input type="hidden" name="batchMode" value="${student.batchMode}">
                     
                     <div class="section-header">Identity & Schedule</div>
                     <div class="row g-3">
@@ -70,12 +68,12 @@
                             <input type="text" name="studentFullName" class="form-control" value="${student.studentFullName}" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted">Batch</label>
+                            <label class="form-label small fw-bold text-muted">Batch Assignment</label>
                             <select name="batchNumber" class="form-select">
-                                <option value="B-101" ${student.batchNumber == 'B-101' ? 'selected' : ''}>B-101 (Morning)</option>
-                                <option value="B-102" ${student.batchNumber == 'B-102' ? 'selected' : ''}>B-102 (Noon)</option>
-                                <option value="B-103" ${student.batchNumber == 'B-103' ? 'selected' : ''}>B-103 (Evening)</option>
-                                <option value="B-104" ${student.batchNumber == 'B-104' ? 'selected' : ''}>B-104 (Weekend)</option>
+                                <option value="FDJ-185" ${student.batchNumber == 'FDJ-185' ? 'selected' : ''}>FDJ-185</option>
+                                <option value="REG-185" ${student.batchNumber == 'REG-185' ? 'selected' : ''}>REG-185</option>
+                                <option value="FDJ-161" ${student.batchNumber == 'FDJ-161' ? 'selected' : ''}>FDJ-161</option>
+                                <option value="REG-161" ${student.batchNumber == 'REG-161' ? 'selected' : ''}>REG-161</option>
                             </select>
                         </div>
                     </div>
@@ -87,11 +85,11 @@
                             <div class="p-3 border rounded bg-light d-flex justify-content-around">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="studentCourse" value="Java" id="j" ${student.studentCourse == 'Java' ? 'checked' : ''}>
-                                    <label class="form-check-label fw-bold" for="j">Java Foundation (30k)</label>
+                                    <label class="form-check-label fw-bold" for="j">Java Foundation (₹30k)</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="studentCourse" value="Python" id="p" ${student.studentCourse == 'Python' ? 'checked' : ''}>
-                                    <label class="form-check-label fw-bold" for="p">Python Advanced (40k)</label>
+                                    <label class="form-check-label fw-bold" for="p">Python Advanced (₹40k)</label>
                                 </div>
                             </div>
                         </div>
@@ -99,8 +97,8 @@
                         <div class="col-12">
                             <label class="form-label small fw-bold text-muted">Payment Progress</label>
                             <div class="input-group">
-                                <c:set var="isLocked" value="${(student.studentCourse == 'Java' && student.feesPaid >= 30000) || (student.studentCourse == 'Python' && student.feesPaid >= 40000) || student.feesStatus == 'Paid'}" />
-                                <span class="input-group-text"><i class="fas ${isLocked ? 'fa-shield-check text-success' : 'fa-wallet'}"></i></span>
+                                <c:set var="isLocked" value="${student.feesStatus == 'Paid'}" />
+                                <span class="input-group-text"><i class="fas ${isLocked ? 'fa-check-circle text-success' : 'fa-wallet'}"></i></span>
                                 <input type="number" id="feesPaid" name="feesPaid" class="form-control fw-bold" value="${student.feesPaid}" ${isLocked ? 'readonly' : ''}>
                                 <span class="input-group-text bg-white"><i class="fas ${isLocked ? 'fa-lock text-danger' : 'fa-pen'}"></i></span>
                             </div>
@@ -109,8 +107,8 @@
                                 <div class="fee-completion-card">
                                     <i class="fas fa-medal"></i>
                                     <div>
-                                        <p class="fee-title">Account Fully Settled</p>
-                                        <p class="fee-desc">The student has successfully completed the full fee requirement. No further action is needed.</p>
+                                        <p class="fw-bold text-success mb-0">Account Fully Settled</p>
+                                        <p class="small text-muted mb-0">The full fee requirement is complete. Amount is locked.</p>
                                     </div>
                                 </div>
                             </c:if>
@@ -119,9 +117,9 @@
 
                     <div class="mt-5 d-flex justify-content-between align-items-center">
                         <div id="statusMsg" class="small text-muted fw-bold">
-                            <i class="fas fa-search me-1"></i> Waiting for changes...
+                            <i class="fas fa-search me-1"></i> No changes detected
                         </div>
-                        <button type="button" id="saveBtn" onclick="handleUpdate()" class="btn btn-update px-5" disabled>
+                        <button type="submit" id="saveBtn" class="btn btn-update px-5" disabled>
                             Update Profile
                         </button>
                     </div>
@@ -130,30 +128,64 @@
         </div>
     </div>
 
+    <div class="modal fade" id="successModal" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center border-0 shadow-lg" style="border-radius: 25px; padding: 2.5rem;">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                    </div>
+                    <h3 class="fw-bold mb-3 text-success">Updated Successfully!</h3>
+                    <p class="text-muted mb-4 fs-5">The student profile has been saved to the database.</p>
+                    <button type="button" onclick="window.location.href='view'" class="btn btn-success w-100 py-3 fw-bold" style="border-radius: 50px;">
+                        GO TO DASHBOARD
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const form = document.getElementById('editForm');
         const saveBtn = document.getElementById('saveBtn');
         const statusMsg = document.getElementById('statusMsg');
-        const initialState = new FormData(form);
-        const initialData = JSON.stringify(Object.fromEntries(initialState));
+
+        // Check for changes to enable/disable button
+        const initialData = new FormData(form);
+        const initialString = JSON.stringify(Object.fromEntries(initialData));
 
         form.addEventListener('input', () => {
-            const currentData = JSON.stringify(Object.fromEntries(new FormData(form)));
-            const isChanged = initialData !== currentData;
+            const currentData = new FormData(form);
+            const currentString = JSON.stringify(Object.fromEntries(currentData));
+            const isChanged = initialString !== currentString;
+            
             saveBtn.disabled = !isChanged;
             statusMsg.innerHTML = isChanged ? 
                 '<i class="fas fa-edit text-primary me-1"></i> Changes detected' : 
-                '<i class="fas fa-search me-1"></i> Waiting for changes...';
+                '<i class="fas fa-search me-1"></i> No changes detected';
             statusMsg.className = isChanged ? 'small text-primary fw-bold' : 'small text-muted fw-bold';
         });
 
-        function handleUpdate() {
+        // Trigger Success Modal on Form Submit
+        form.onsubmit = function(e) {
+            e.preventDefault();
             const formData = new FormData(form);
+            
             saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
-            saveBtn.disabled = true;
-            fetch('update_student_process', { method: 'POST', body: new URLSearchParams(formData) })
-            .then(() => { window.location.href = 'view'; });
-        }
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            }).then(response => {
+                var myModal = new bootstrap.Modal(document.getElementById('successModal'));
+                myModal.show();
+            }).catch(err => {
+                alert("Update failed. Please try again.");
+                saveBtn.innerHTML = 'Update Profile';
+                saveBtn.disabled = false;
+            });
+        };
     </script>
 </body>
 </html>

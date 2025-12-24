@@ -64,11 +64,9 @@ public class HnadlerController {
 
     @RequestMapping("/feeStatus")
     public String showFeeStatus(@RequestParam("studentid") int id, Model model) {
-        // Logic to get student data
-        Student student =ssi.getStudent(id);
-        model.addAttribute("student", student);
-        // This must match the name of your JSP file (e.g., feePage.jsp)
-        return "feeStatus"; 
+        Student student = ssi.getStudent(id); // Ensure this returns a valid student
+        model.addAttribute("student", student); // Name must match "student" in JSP
+        return "feeStatus";
     }
     
     @RequestMapping("/payFees")
@@ -140,6 +138,18 @@ public class HnadlerController {
         return "adminScreen";
     }
 
+    @RequestMapping("/search")
+    public String searchByBatch(@RequestParam("batchNumber") String batchNumber, Model model) {
+        // 1. Fetch students from your service based on the batch number
+        List<Student> filteredStudents = ssi.searchByBatch(batchNumber); 
+        
+        // 2. Add the results back to the 'data' attribute used by your JSP table
+        model.addAttribute("data", filteredStudents);
+        
+        // 3. Return to the admin screen to show the filtered results
+        return "adminScreen"; 
+    }
+    
     @RequestMapping("/remove")
     public String removeData(@RequestParam("id") int id, Model m) {
         ssi.removeStudent(id);
