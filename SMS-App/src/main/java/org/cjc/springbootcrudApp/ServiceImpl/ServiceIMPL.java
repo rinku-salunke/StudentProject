@@ -72,6 +72,12 @@ public class ServiceIMPL implements ServiceI{
            List<Student>   list     =sr.findAll(p).getContent();
 		return list;
 	}
+
+	@Override
+	public List<Student> updateStudentData(Student s) {
+		sr.save(s); // JpaRepository save() handles update if ID is present
+	    return sr.findAll();
+	}
 	}
 
 

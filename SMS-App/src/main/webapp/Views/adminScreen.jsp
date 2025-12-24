@@ -23,6 +23,11 @@ body {
 	scroll-behavior: smooth;
 }
 
+.instagram-bg {
+	background: #f09433;
+	background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%
+		, #bc1888 100%);
+}
 /* Modern Navbar */
 .navbar {
 	backdrop-filter: blur(10px);
@@ -72,6 +77,9 @@ body {
 	color: white;
 }
 
+.youtube-bg {
+	background: #FF0000;
+}
 /* Custom Buttons */
 .btn-modern {
 	border-radius: 10px;
@@ -293,7 +301,10 @@ body {
 			<div class="d-flex gap-2">
 				<a href="#enroll" class="btn btn-sm btn-outline-primary btn-modern">Enroll</a>
 				<a href="#view" class="btn btn-sm btn-outline-primary btn-modern">Database</a>
-				<a href="/" class="btn btn-sm btn-danger btn-modern"><i
+<a href="feeStatus?studentid=${student.studentId}" class="btn btn-sm btn-info">
+    <i class="fas fa-file-invoice-dollar"></i>Fee Status
+</a>
+				 <a href="/" class="btn btn-sm btn-danger btn-modern"><i
 					class="fas fa-sign-out-alt"></i></a>
 			</div>
 		</div>
@@ -311,22 +322,22 @@ body {
 								<div class="col-md-6">
 									<label class="form-label small fw-bold">Full Name</label> <input
 										type="text" class="form-control" name="studentFullName"
-										placeholder="John Doe" required>
+										placeholder="Enter Full Name" required>
 								</div>
 								<div class="col-md-6">
 									<label class="form-label small fw-bold">Email Address</label> <input
 										type="email" class="form-control" name="studentEmail"
-										placeholder="john@example.com" required>
+										placeholder="Enter Student Email Address" required>
 								</div>
 								<div class="col-md-6">
 									<label class="form-label small fw-bold">Age</label> <input
 										type="number" class="form-control" name="StudentAge"
-										placeholder="20">
+										placeholder="Enter Student age">
 								</div>
 								<div class="col-md-6">
 									<label class="form-label small fw-bold">College</label> <input
 										type="text" class="form-control" name="studentCollageName"
-										placeholder="University Name">
+										placeholder="Enter University Name">
 								</div>
 								<div class="col-12">
 									<label class="form-label small fw-bold">Course
@@ -419,6 +430,8 @@ body {
 								<th class="ps-4">ID</th>
 								<th>Student Name</th>
 								<th>Email</th>
+								<th>Age</th>
+								<th>studentCollageName</th>
 								<th>Course</th>
 								<th>Batch</th>
 								<th>Fees</th>
@@ -429,28 +442,46 @@ body {
 						<tbody>
 							<c:forEach items="${data}" var="s">
 								<tr>
-									<td class="ps-4 fw-bold">${s.studentId}</td>
-									<td>${s.studentFullName}</td>
-									<td class="text-muted">${s.studentEmail}</td>
-									<td><span class="badge bg-info text-dark">${s.studentCourse}</span></td>
-									<td>${s.batchNumber}</td>
-									<td class="text-success fw-bold">${s.feesPaid}</td>
-									<td><input type="radio" class="form-check-input" name="id"
-										value="${s.studentId}"></td>
+									<td class="ps-4 fw-bold text-primary">${s.studentId}</td>
+									<td class="fw-semibold">${s.studentFullName}</td>
+									<td class="text-muted small">${s.studentEmail}</td>
+									<td>${s.studentAge}</td>
+									<td>${s.studentCollageName}</td>
+
+									<td><span
+										class="badge ${s.studentCourse == 'Java' ? 'bg-primary' : 'bg-success'}">
+											${s.studentCourse} </span></td>
+
+									<td><span class="badge bg-light text-dark border">${s.batchNumber}</span>
+									</td>
+
+									<td class="text-success fw-bold">₹${s.feesPaid}</td>
+
+									<td class="text-center"><input type="radio"
+										class="form-check-input" name="id" value="${s.studentId}">
+									</td>
+
 									<td class="text-center">
 										<div class="btn-group shadow-sm">
-											<button type="button" class="btn btn-sm btn-outline-success"
-												onclick="handleAction('/fees')">
-												<i class="fas fa-wallet"></i> Pay
+											<button type="button" class="btn btn-sm btn-outline-warning"
+												onclick="handleAction('/edit')" title="edit student">
+												<i class="fas fa-edit"></i>
 											</button>
+
+											<button type="button" class="btn btn-sm btn-outline-success"
+												onclick="handleAction('/fees')" title="Pay Fee">
+												<i class="fas fa-file-invoice-dollar"></i>
+											</button>
+
 											<button type="button" class="btn btn-sm btn-outline-primary"
-												onclick="handleAction('/batch')">
-												<i class="fas fa-exchange-alt"></i> Shift
+												onclick="handleAction('/batch')" title="Shift Batch">
+												<i class="fas fa-exchange-alt"></i>
 											</button>
 											<button type="button" class="btn btn-sm btn-outline-danger"
-												onclick="handleAction('/remove')">
-												<i class="fas fa-trash"></i> Remove
+												onclick="handleAction('/remove')" title="delete student">
+												<i class="fas fa-trash"></i>
 											</button>
+
 										</div>
 									</td>
 								</tr>
@@ -461,10 +492,12 @@ body {
 
 				<nav aria-label="...">
 					<ul class="pagination pagination-sm">
-						<li class="page-item"><a class="page-link" href="paging?pageNo=0"
-							tabindex="-1">1</a></li>
-						<li class="page-item"><a class="page-link" href="paging?pageNo=2">2</a></li>
-						<li class="page-item"><a class="page-link" href="paging?pageNo=3">3</a></li>
+						<li class="page-item"><a class="page-link"
+							href="paging?pageNo=0" tabindex="-1">1</a></li>
+						<li class="page-item"><a class="page-link"
+							href="paging?pageNo=2">2</a></li>
+						<li class="page-item"><a class="page-link"
+							href="paging?pageNo=3">3</a></li>
 					</ul>
 				</nav>
 
@@ -519,10 +552,14 @@ body {
 									tracking for modern institutions.</p>
 							</div>
 							<div class="footer-social-icon">
-								<span>Follow us</span> <a href="#"><i
-									class="fab fa-facebook-f facebook-bg"></i></a> <a href="#"><i
-									class="fab fa-twitter twitter-bg"></i></a> <a href="#"><i
-									class="fab fa-google-plus-g google-bg"></i></a>
+								<span>Follow us</span> <a
+									href="https://www.facebook.com/completejavaclasses/"><i
+									class="fab fa-facebook-f facebook-bg"></i></a> <a
+									href="https://www.youtube.com/redirect?event=channel_header&amp;redir_token=QUFFLUhqbGZPeXZtd3RGMG4zOGZNSERtSWk5alROUF94Z3xBQ3Jtc0ttdExPMTVUbEZpaVFWX2V2emNBb0dUdXpybmZqQmdqeXpQUHBSTVZpVVZFWklqRHhERlpuakIyYmI5dXpXdTIxRGd1bXgydUNEalZfRS1PdW9ZeGl3dHd1bjVXczI1T3Z1dFc1WThkQXJDS3dtamdFRQ&amp;q=https%3A%2F%2Fcompletejavaclasses.com%2Findex.html">
+									<i class="fab fa-youtube youtube-bg"></i>
+								</a> <a href="https://www.instagram.com/cjc_pune/"> <i
+									class="fab fa-instagram instagram-bg"></i>
+								</a>
 							</div>
 						</div>
 					</div>

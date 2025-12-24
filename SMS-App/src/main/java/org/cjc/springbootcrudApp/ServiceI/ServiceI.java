@@ -19,4 +19,6 @@ public interface ServiceI {
 	List<Student> updateStudentBatch(int id, String newBatch);
 
 	List<Student> paging(int pageNo, int i);
+
+	List<Student> updateStudentData(Student s);
 }
