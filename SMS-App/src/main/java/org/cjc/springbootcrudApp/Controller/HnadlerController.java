@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HnadlerController {
-
+   String s;
+	
     @Autowired
     ServiceI ssi;
 
