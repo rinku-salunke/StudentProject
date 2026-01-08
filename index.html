@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Project - Branch Selector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        select:hover {
+            border-color: #667eea;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        select option:first-child {
+            color: #999;
+        }
+
+        select option:not(:first-child) {
+            color: #333;
+        }
+
+        .info-box {
+            background-color: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .selected-branch {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .selected-branch.show {
+            display: block;
+        }
+
+        .selected-branch p {
+            color: #2e7d32;
+            font-size: 14px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Project</h1>
+        <p class="subtitle">Git Branch Selector</p>
+
+        <form id="branchForm">
+            <div class="form-group">
+                <label for="branchName">Branch Name</label>
+                <select id="branchName" name="branchName" required>
+                    <option value="" disabled selected>Select Here</option>
+                    <option value="master">master</option>
+                    <option value="main">main</option>
+                    <option value="develop">develop</option>
+                    <option value="feature/new-feature">feature/new-feature</option>
+                    <option value="bugfix/fix-issue">bugfix/fix-issue</option>
+                    <option value="release/v1.0">release/v1.0</option>
+                    <option value="hotfix/critical-fix">hotfix/critical-fix</option>
+                    <option value="copilot/edit-branch-name">copilot/edit-branch-name</option>
+                    <option value="copilot/fix-branch-name-option">copilot/fix-branch-name-option</option>
+                </select>
+            </div>
+
+            <button type="submit">Confirm Selection</button>
+        </form>
+
+        <div class="info-box">
+            <p><strong>Note:</strong> The branch name dropdown now correctly displays "Select Here" as the default placeholder option. Choose a branch from the list above.</p>
+        </div>
+
+        <div class="selected-branch" id="selectedBranch">
+            <p><strong>Selected Branch:</strong> <span id="branchDisplay"></span></p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('branchForm');
+        const branchSelect = document.getElementById('branchName');
+        const selectedBranchDiv = document.getElementById('selectedBranch');
+        const branchDisplay = document.getElementById('branchDisplay');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedBranch = branchSelect.value;
+            
+            if (selectedBranch) {
+                branchDisplay.textContent = selectedBranch;
+                selectedBranchDiv.classList.add('show');
+                
+                // Optional: Log to console
+                console.log('Selected branch:', selectedBranch);
+            }
+        });
+
+        // Optional: Real-time display of selection
+        branchSelect.addEventListener('change', function() {
+            if (this.value) {
+                branchDisplay.textContent = this.value;
+                selectedBranchDiv.classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>
