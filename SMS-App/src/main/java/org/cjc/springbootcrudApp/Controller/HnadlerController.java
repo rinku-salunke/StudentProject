@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HnadlerController {
    
+	int s;
 	
     @Autowired
     ServiceI ssi;
@@ -104,6 +105,8 @@ public class HnadlerController {
         return "Edit";
     }
 
+    
+    
     @RequestMapping("/update_student_process")
     public String updateStudent(@ModelAttribute Student s, Model m) {
         float maxFee = s.getStudentCourse().equalsIgnoreCase("Java") ? 30000.0f : 40000.0f;
