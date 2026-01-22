@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HnadlerController {
    
-	int k;
+	int k1;
     @Autowired
     ServiceI ssi;
 
